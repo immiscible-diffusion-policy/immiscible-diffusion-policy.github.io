@@ -72,14 +72,15 @@ function layoutDistributionLabels() {
     labelContext.font = '13px Arial';
     let cumulative = 0;
     const labels = [];
-    segments.forEach(segment => {
+    segments.forEach((segment, segmentIndex) => {
       const value = Number(segment.dataset.value);
       const text = `${format(value)}%`;
       const fraction = value / total;
       const fits = value >= 10 && width * fraction >= labelContext.measureText(text).width + 12;
       segment.textContent = fits ? text : '';
       if (!fits) {
-        labels.push({text, anchor: width * (cumulative + fraction / 2),
+        labels.push({text, segmentIndex, color: getComputedStyle(segment).backgroundColor,
+          anchor: width * (cumulative + fraction / 2),
           width: labelContext.measureText(text).width + 8});
       }
       cumulative += fraction;
@@ -100,11 +101,14 @@ function layoutDistributionLabels() {
     const svg = svgElement('svg', {class: 'bar-callouts', viewBox: `0 0 ${width} ${height}`,
       width, height, 'aria-hidden': 'true', focusable: 'false'});
     const defs = svgElement('defs');
-    const markerId = `bar-arrow-${rowIndex}`;
-    const marker = svgElement('marker', {id: markerId, viewBox: '0 0 6 6', refX: 5, refY: 3,
-      markerWidth: 5, markerHeight: 5, orient: 'auto'});
-    marker.append(svgElement('path', {d: 'M 0 0 L 6 3 L 0 6 Z', fill: '#737b84'}));
-    defs.append(marker); svg.append(defs);
+    labels.forEach(label => {
+      label.markerId = `bar-arrow-${rowIndex}-${label.segmentIndex}`;
+      const marker = svgElement('marker', {id: label.markerId, viewBox: '0 0 6 6', refX: 5, refY: 3,
+        markerWidth: 5, markerHeight: 5, orient: 'auto'});
+      marker.append(svgElement('path', {d: 'M 0 0 L 6 3 L 0 6 Z', fill: label.color}));
+      defs.append(marker);
+    });
+    svg.append(defs);
     const arrows = svgElement('g');
     const texts = svgElement('g');
     lanes.forEach((lane, laneIndex) => {
@@ -122,10 +126,10 @@ function layoutDistributionLabels() {
         const baseline = 33 + laneIndex * 24;
         const anchor = Math.max(2, Math.min(width - 2, label.anchor));
         arrows.append(svgElement('path', {d: `M ${label.center} ${baseline - 13} L ${anchor} 2`,
-          fill: 'none', stroke: '#737b84', 'stroke-width': 1, 'marker-end': `url(#${markerId})`}));
+          fill: 'none', stroke: label.color, 'stroke-width': 1, 'marker-end': `url(#${label.markerId})`}));
         texts.append(svgElement('rect', {x: label.center - label.width / 2, y: baseline - 11,
           width: label.width, height: 15, fill: '#fff'}));
-        const text = svgElement('text', {x: label.center, y: baseline, 'text-anchor': 'middle'});
+        const text = svgElement('text', {x: label.center, y: baseline, 'text-anchor': 'middle', fill: label.color});
         text.textContent = label.text;
         texts.append(text);
       });

@@ -88,4 +88,4 @@
 
 /* Narrow bar segments retain their true widths; labels sit below with fine arrows. */
 .bar-callouts{display:block;width:100%;overflow:visible}
-.bar-callouts text{font-family:Arial,Helvetica,sans-serif;font-size:13px;fill:var(--ink)}
+.bar-callouts text{font-family:Arial,Helvetica,sans-serif;font-size:13px}
