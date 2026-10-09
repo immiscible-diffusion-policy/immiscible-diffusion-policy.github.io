@@ -1,0 +1,47 @@
+{
+  "source": "../fig3_simulation_tasks.pdf",
+  "renderWidth": 2200,
+  "note": "Task panels cropped from Figure 3. Bottom task names and panel letters are excluded.",
+  "tasks": {
+    "pusht": {
+      "cropPixels": [
+        0,
+        0,
+        396,
+        270
+      ]
+    },
+    "blocks": {
+      "cropPixels": [
+        404,
+        0,
+        443,
+        270
+      ]
+    },
+    "bread": {
+      "cropPixels": [
+        854,
+        0,
+        443,
+        270
+      ]
+    },
+    "shoe": {
+      "cropPixels": [
+        1305,
+        0,
+        443,
+        270
+      ]
+    },
+    "qrcode": {
+      "cropPixels": [
+        1757,
+        0,
+        443,
+        270
+      ]
+    }
+  }
+}

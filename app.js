@@ -16,6 +16,16 @@ function syncRollout() {
   if (rolloutImage.getAttribute('src') !== src) rolloutImage.src = src;
 }
 function renderRollout(task) {
+  const illustration = document.getElementById('task-illustration');
+  const illustrationImage = document.getElementById('task-illustration-image');
+  illustration.hidden = !task.illustration;
+  document.querySelector('.task-introduction').classList.toggle('has-task-illustration', Boolean(task.illustration));
+  if (task.illustration) {
+    illustrationImage.src = task.illustration.src;
+    illustrationImage.alt = task.illustration.alt;
+    illustrationImage.width = task.illustration.width;
+    illustrationImage.height = task.illustration.height;
+  }
   activeRollout = task.rollout;
   rolloutImage.alt = activeRollout.count
     ? `${activeRollout.count} example Immiscible Diffusion Policy rollouts for ${task.name}`
@@ -160,45 +170,57 @@ document.getElementById('copy-citation').addEventListener('click', async () => {
   }
 });
 
-// Progressive enhancement: content stays visible without JavaScript or motion support.
-if ('IntersectionObserver' in window && !reducedMotion.matches) {
+// Progressive enhancement: every section reveals on entry, without hiding content
+// from visitors who disable JavaScript or request reduced motion.
+if ('IntersectionObserver' in window) {
   const revealBlocks = [...document.querySelectorAll(
-    '#overview, #collapse, #method, #experiments, #results > .container > .section-heading, ' +
+    '#overview, #collapse, #method, #results > .container > .section-heading, ' +
     '.results-explorer, #training-results, #all-results, #conclusion, .implementation-section, #citation'
   )];
-  const reveal = block => {
-    block.classList.remove('reveal-pending');
-    revealObserver.unobserve(block);
-  };
-  const revealObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) reveal(entry.target);
-    });
-  }, {rootMargin: '0px 0px -40px 0px', threshold: 0});
-  revealBlocks.forEach(block => {
-    if (block.getBoundingClientRect().top >= window.innerHeight - 40) {
-      block.classList.add('scroll-reveal', 'reveal-pending');
-      revealObserver.observe(block);
+  let revealObserver;
+  const show = block => block.classList.remove('reveal-pending');
+  const configureReveals = () => {
+    if (revealObserver) revealObserver.disconnect();
+    if (reducedMotion.matches) {
+      revealBlocks.forEach(show);
+      return;
     }
-  });
-  const revealTarget = target => {
-    if (!target) return;
+    const inset = Math.min(100, Math.round(window.innerHeight * 0.12));
     revealBlocks.forEach(block => {
-      if (block.contains(target) || target.contains(block)) reveal(block);
+      const rect = block.getBoundingClientRect();
+      block.classList.add('scroll-reveal');
+      block.classList.toggle('reveal-pending',
+        (rect.top >= window.innerHeight - inset || rect.bottom <= 0) &&
+        !block.contains(document.activeElement));
     });
+    revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const focused = entry.target.contains(document.activeElement);
+        entry.target.classList.toggle('reveal-pending', !entry.isIntersecting && !focused);
+      });
+    }, {rootMargin: `0px 0px -${inset}px 0px`, threshold: 0});
+    revealBlocks.forEach(block => revealObserver.observe(block));
   };
-  const revealHash = () => {
+  const showTarget = target => {
+    if (!target) return;
+    revealBlocks.filter(block => block.contains(target)).forEach(show);
+    // A parent anchor such as #results reveals its first block, not every later figure.
+    const firstChildBlock = revealBlocks.find(block => target.contains(block));
+    if (firstChildBlock) show(firstChildBlock);
+  };
+  const showHash = () => {
     try {
-      revealTarget(document.getElementById(decodeURIComponent(location.hash.slice(1))));
+      showTarget(document.getElementById(decodeURIComponent(location.hash.slice(1))));
     } catch (_) { /* Ignore malformed fragment identifiers. */ }
   };
-  revealHash();
-  window.addEventListener('hashchange', revealHash);
-  document.addEventListener('focusin', event => revealTarget(event.target));
-  reducedMotion.addEventListener('change', event => {
-    if (event.matches) {
-      revealBlocks.forEach(reveal);
-      revealObserver.disconnect();
-    }
+  configureReveals();
+  showHash();
+  window.addEventListener('hashchange', showHash);
+  document.addEventListener('focusin', event => showTarget(event.target));
+  reducedMotion.addEventListener('change', configureReveals);
+  let resizeFrame;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(configureReveals);
   });
 }

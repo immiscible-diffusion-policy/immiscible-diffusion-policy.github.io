@@ -12,12 +12,12 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://immiscible-diffusion-policy.github.io/">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=results-3">
+  <script src="app.js?v=results-3" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header"><nav aria-label="Main navigation"><a href="#overview">Problem</a><a href="#collapse">Collapse</a><a href="#method">Method</a><a href="#experiments">Experiments</a><a href="#results">Results</a><a href="#conclusion">Conclusion</a><a href="#citation">BibTeX</a></nav></header>
+<header class="site-header"><nav aria-label="Main navigation"><a href="#overview">Problem</a><a href="#collapse">Collapse</a><a href="#method">Method</a><a href="#results">Results</a><a href="#conclusion">Conclusion</a><a href="#citation">BibTeX</a></nav></header>
 <main id="main">
   <section class="hero container" id="top" aria-labelledby="paper-title">
     
@@ -100,26 +100,21 @@
     </div>
   </section>
 
-  <section class="section experiments-section container" id="experiments" aria-labelledby="experiments-title">
-    <div class="section-heading"><h2 id="experiments-title">Tasks and robot experiments</h2><p>We evaluate five simulation tasks and two tasks on a Unitree G1 humanoid, using Diffusion Policy (DP) and 3D Diffusion Policy (DP3). The experiments span state, RGB, and point cloud observations, with two or four valid modalities defined by pushing direction, arm choice, placement orientation, or rotation direction.</p></div>
-    <figure class="simulation-figure"><a href="assets/fig3_simulation_tasks.pdf"><img src="assets/fig3_simulation_tasks.png" alt="Simulation task configurations and valid modalities for Push-T, Stack Blocks, Place Bread, Place Shoe, and Rotate QR Code" loading="lazy" width="2200" height="312"></a></figure>
-    <div class="humanoid-experiment">
-      <figure><img src="assets/fig4_humanoid_tasks.png" alt="Unitree G1 task setups and execution with either arm for Fruit-to-Plate and Can-to-Bin" width="2200" height="1991" loading="lazy"><figcaption>Fruit-to-Plate and Can-to-Bin on the Unitree G1.</figcaption></figure>
-      <div><h3>Humanoid manipulation</h3><p>The G1 places a banana on a plate or a can in a bin. Each task admits execution with either hand, and the demonstrations include both behaviors.</p><p>Vanilla and Immiscible policies use the same demonstrations, architecture, and evaluation settings. We classify each rollout by its attempted modality, independently of whether it succeeds, and report modality frequency alongside task performance.</p></div>
-    </div>
 
-  </section>
 
   <section class="section results-section" id="results" aria-labelledby="results-title">
     <div class="container">
-      <div class="section-heading"><h2 id="results-title">Experimental results</h2><p>We evaluate how often each demonstrated modality appears in policy rollouts. Across the three simulation tasks with two modes, Immiscible increases the frequency of the minority mode by 6.0 to 14.6 times. On both tasks with four modes, it recovers a modality that is absent from vanilla rollouts. On each G1 task, both hand modalities appear in a 50:50 split.</p></div>
+      <div class="section-heading"><h2 id="results-title">Experimental results</h2><p>We evaluate five simulation tasks and two tasks on a Unitree G1 humanoid, using Diffusion Policy (DP) and 3D Diffusion Policy (DP3). The experiments span state, RGB, and point cloud observations, with two or four valid modalities defined by pushing direction, arm choice, placement orientation, or rotation direction.</p><p>We evaluate how often each demonstrated modality appears in policy rollouts. Across the three simulation tasks with two modes, Immiscible increases the frequency of the minority mode by 6.0 to 14.6 times. On both tasks with four modes, it recovers a modality that is absent from vanilla rollouts. On each G1 task, both hand modalities appear in a 50:50 split.</p></div>
       <div class="results-explorer">
         <div class="task-tabs" role="tablist" aria-label="Select an experimental task"><button class="task-tab" type="button" role="tab" id="tab-pusht" aria-controls="result-panel" aria-selected="true" tabindex="0" data-task="pusht">Push-T</button><button class="task-tab" type="button" role="tab" id="tab-blocks" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="blocks">Stack Blocks</button><button class="task-tab" type="button" role="tab" id="tab-bread" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="bread">Place Bread</button><button class="task-tab" type="button" role="tab" id="tab-shoe" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="shoe">Place Shoe</button><button class="task-tab" type="button" role="tab" id="tab-qrcode" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="qrcode">Rotate QR Code</button><button class="task-tab" type="button" role="tab" id="tab-fruit" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="fruit">Fruit-to-Plate</button><button class="task-tab" type="button" role="tab" id="tab-can" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="can">Can-to-Bin</button></div>
         <div id="result-panel" role="tabpanel" aria-labelledby="tab-pusht" tabindex="0">
           <div class="result-top"><div><p class="result-meta" id="result-meta">Simulation</p><h3 id="task-title">Push-T</h3></div></div>
-          <div class="task-introduction">
+          <div class="task-introduction has-task-illustration">
             <div class="task-modality-context"><h4>Behaviors in this task</h4><ul id="task-modalities"><li>Clockwise pushing</li><li>Counterclockwise pushing</li></ul></div>
-            <figure class="task-rollout"><img id="task-rollout-image" src="assets/rollouts/pusht.png" alt="Example Immiscible Diffusion Policy rollout for Push-T" width="240" height="240" loading="lazy"></figure>
+            <div class="task-media">
+              <figure class="task-illustration" id="task-illustration"><img id="task-illustration-image" src="assets/tasks/pusht.png" alt="Push T task setup showing both valid pushing directions" width="396" height="270" loading="lazy"></figure>
+              <figure class="task-rollout"><img id="task-rollout-image" src="assets/rollouts/pusht.png" alt="Example Immiscible Diffusion Policy rollout for Push-T" width="240" height="240" loading="lazy"></figure>
+            </div>
           </div>
           <div class="result-body">
             <div class="distribution"><p class="chart-heading">Rollout modality distribution <span>% of rollouts</span></p><div id="distribution-bars"></div><div id="mode-legend" class="mode-legend"></div></div>
