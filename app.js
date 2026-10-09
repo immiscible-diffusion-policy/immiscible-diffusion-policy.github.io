@@ -115,7 +115,7 @@ tabs.forEach((tab,index) => {
     }
   });
 });
-fetch('data/results.json').then(response => {
+fetch('data/results.json?v=task-panels-1', {cache: 'no-cache'}).then(response => {
   if (!response.ok) throw new Error('Unable to load results');
   return response.json();
 }).then(data => { tasks = data.tasks; renderTask(selectedTask); }).catch(() => {
