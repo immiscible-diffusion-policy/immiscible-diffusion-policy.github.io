@@ -53,6 +53,99 @@ if ('IntersectionObserver' in window) {
   });
   rolloutObserver.observe(rolloutImage);
 }
+const labelCanvas = document.createElement('canvas');
+const labelContext = labelCanvas.getContext('2d');
+const svgNamespace = 'http://www.w3.org/2000/svg';
+function svgElement(name, attributes = {}) {
+  const element = document.createElementNS(svgNamespace, name);
+  Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+  return element;
+}
+function layoutDistributionLabels() {
+  document.querySelectorAll('.distribution-row').forEach((row, rowIndex) => {
+    row.querySelector('.bar-callouts')?.remove();
+    const rail = row.querySelector('.bar-rail');
+    const width = rail.clientWidth;
+    if (!width) return;
+    const segments = [...rail.children];
+    const total = segments.reduce((sum, segment) => sum + Number(segment.dataset.value), 0);
+    labelContext.font = '13px Arial';
+    let cumulative = 0;
+    const labels = [];
+    segments.forEach(segment => {
+      const value = Number(segment.dataset.value);
+      const text = `${format(value)}%`;
+      const fraction = value / total;
+      const fits = value >= 10 && width * fraction >= labelContext.measureText(text).width + 12;
+      segment.textContent = fits ? text : '';
+      if (!fits) {
+        labels.push({text, anchor: width * (cumulative + fraction / 2),
+          width: labelContext.measureText(text).width + 8});
+      }
+      cumulative += fraction;
+    });
+    if (!labels.length) return;
+    // Spread adjacent labels within the chart, retaining their left to right order.
+    const lanes = [[]];
+    let used = 0;
+    labels.forEach(label => {
+      if (used && used + 10 + label.width > width - 4) {
+        lanes.push([]);
+        used = 0;
+      }
+      lanes[lanes.length - 1].push(label);
+      used += label.width + (used ? 10 : 0);
+    });
+    const height = 40 + (lanes.length - 1) * 24;
+    const svg = svgElement('svg', {class: 'bar-callouts', viewBox: `0 0 ${width} ${height}`,
+      width, height, 'aria-hidden': 'true', focusable: 'false'});
+    const defs = svgElement('defs');
+    const markerId = `bar-arrow-${rowIndex}`;
+    const marker = svgElement('marker', {id: markerId, viewBox: '0 0 6 6', refX: 5, refY: 3,
+      markerWidth: 5, markerHeight: 5, orient: 'auto'});
+    marker.append(svgElement('path', {d: 'M 0 0 L 6 3 L 0 6 Z', fill: '#737b84'}));
+    defs.append(marker); svg.append(defs);
+    const arrows = svgElement('g');
+    const texts = svgElement('g');
+    lanes.forEach((lane, laneIndex) => {
+      lane.forEach((label, index) => {
+        label.center = Math.max(label.width / 2 + 2, Math.min(width - label.width / 2 - 2, label.anchor));
+        if (index) label.center = Math.max(label.center,
+          lane[index - 1].center + lane[index - 1].width / 2 + label.width / 2 + 10);
+      });
+      for (let i = lane.length - 1; i >= 0; i--) {
+        const limit = i === lane.length - 1 ? width - lane[i].width / 2 - 2
+          : lane[i + 1].center - lane[i + 1].width / 2 - lane[i].width / 2 - 10;
+        lane[i].center = Math.min(lane[i].center, limit);
+      }
+      lane.forEach(label => {
+        const baseline = 33 + laneIndex * 24;
+        const anchor = Math.max(2, Math.min(width - 2, label.anchor));
+        arrows.append(svgElement('path', {d: `M ${label.center} ${baseline - 13} L ${anchor} 2`,
+          fill: 'none', stroke: '#737b84', 'stroke-width': 1, 'marker-end': `url(#${markerId})`}));
+        texts.append(svgElement('rect', {x: label.center - label.width / 2, y: baseline - 11,
+          width: label.width, height: 15, fill: '#fff'}));
+        const text = svgElement('text', {x: label.center, y: baseline, 'text-anchor': 'middle'});
+        text.textContent = label.text;
+        texts.append(text);
+      });
+    });
+    svg.append(arrows, texts);
+    row.append(svg);
+  });
+}
+let chartWidth = 0;
+if ('ResizeObserver' in window) {
+  new ResizeObserver(entries => {
+    const width = entries[0].contentRect.width;
+    if (Math.abs(width - chartWidth) > 0.5) {
+      chartWidth = width;
+      layoutDistributionLabels();
+    }
+  }).observe(document.getElementById('distribution-bars'));
+} else {
+  window.addEventListener('resize', layoutDistributionLabels);
+}
 function renderTask(id, focus = false) {
   const task = tasks.find(t => t.id === id);
   if (!task) return;
@@ -95,12 +188,13 @@ function renderTask(id, focus = false) {
       segment.className = `bar-segment mode-${index + 1}`;
       segment.style.flexGrow = value;
       segment.setAttribute('aria-hidden', 'true');
-      segment.textContent = value >= 10 ? `${format(value)}%` : '';
+      segment.dataset.value = value;
       rail.append(segment);
     });
     row.append(name,rail);
     bars.append(row);
   }
+  layoutDistributionLabels();
   const legend = document.getElementById('mode-legend');
   legend.replaceChildren();
   task.ours.forEach((_,index) => {
