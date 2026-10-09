@@ -52,7 +52,9 @@
     "policy": "Immiscible Diffusion Policy",
     "sourcePlaybackSpeed": 17,
     "fps": 10,
-    "rollouts": 5
+    "rollouts": 5,
+    "playbackSpeed": 10,
+    "timeScale": 1.7
   },
   "can": {
     "source": "../demo.mp4",
@@ -62,7 +64,9 @@
     "policy": "Immiscible Diffusion Policy",
     "sourcePlaybackSpeed": 10,
     "fps": 10,
-    "rollouts": 5
+    "rollouts": 5,
+    "playbackSpeed": 10,
+    "timeScale": 1.0
   },
   "pusht_vanilla_collapse": {
     "source": "../demo.mp4",

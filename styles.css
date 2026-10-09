@@ -50,7 +50,7 @@
 @media(max-width:900px){.overview-layout{grid-template-columns:minmax(0,1fr) 200px;gap:30px}}
 @media(max-width:720px){.overview-layout{grid-template-columns:1fr;gap:25px}.modality-overview{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:480px;width:100%;justify-self:center}.modality-scene p{font-size:14px}}
 
-.implementation-section{padding-block:36px 0}.implementation-section .implementation-note{border-top:0;padding-top:0}
+.implementation-section{padding-block:0 40px}.implementation-section .implementation-note{border-top:0;padding-top:0}
 
 .site-header nav{flex-wrap:wrap;row-gap:8px}
 .collapse-section{border-top:1px solid var(--line)}
@@ -66,3 +66,18 @@
 @media print{.scroll-reveal.reveal-pending{opacity:1;transform:none}}
 
 .expert-values{white-space:normal;min-width:130px;max-width:165px;vertical-align:middle;font-variant-numeric:tabular-nums}
+
+/* Paper style algorithm with native mathematical notation. */
+.algorithm{max-width:900px;margin:auto;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);font-family:Georgia,"Times New Roman",serif;font-size:16px;line-height:1.65}
+.algorithm h3{font-family:Arial,Helvetica,sans-serif;font-size:17px;font-weight:500;padding:13px 16px;border-bottom:1px solid var(--line);line-height:1.5}
+.algorithm h3>span{font-weight:700;margin-right:12px}
+.algorithm-inputs{padding:13px 16px;border-bottom:1px solid var(--line)}
+.algorithm-inputs p+p{margin-top:7px}
+.algorithm-lines{margin:0;padding:13px 20px 16px 48px}
+.algorithm-lines li{padding:5px 0 5px 8px}
+.algorithm-lines li::marker{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:var(--muted)}
+.algorithm sub,.algorithm sup{font-size:.75em;line-height:0}
+.algorithm-equation{display:inline-block;max-width:100%;overflow-x:auto;vertical-align:middle;padding:4px 0}
+.algorithm math{font-size:1.08em}
+.implementation-links{max-width:900px;margin:22px auto 0;display:flex;flex-wrap:wrap}
+@media(max-width:500px){.algorithm{font-size:15px}.algorithm h3{font-size:16px;padding-inline:12px}.algorithm-inputs{padding-inline:12px}.algorithm-lines{padding-left:32px;padding-right:12px}.implementation-links .button{max-width:100%;text-align:center}}

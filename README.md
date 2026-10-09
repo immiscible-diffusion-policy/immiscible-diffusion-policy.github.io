@@ -27,7 +27,7 @@ The preview server listens only on the remote machine's loopback interface. It s
 
 ## Page structure
 
-Title, authors, and demo video → problem and motivation → observed modality collapse → method → experimental setup → results (task comparisons, Figure 5, then Table I) → conclusion → code and citation. This follows the narrative progression of the reference academic project page while retaining the project’s own styling.
+Title, authors, and demo video → problem and motivation → observed modality collapse → method → training pseudocode with equations and codebase link → experimental setup → results (task comparisons, Figure 5, then Table I) → conclusion → citation. This follows the narrative progression of the reference academic project page while retaining the project’s own styling.
 
 ## Files and editing
 
@@ -51,7 +51,7 @@ Sections gently appear as they enter the viewport. Section reveals and chart tra
 - Paper and Figures 1, 3, 4, and 5: supplied by the paper authors. Figure PNGs were rendered from the supplied PDFs.
 - `assets/demo.mp4`: supplied `Final_Immiscible Diffusion Policy Demo.mp4`, remuxed for browser streaming without re-encoding the main video or audio.
 - `assets/rollouts/`: seven looping GIFs and first-frame PNGs, plus a silent looping video grid of nine vanilla Push T rollouts. The collapse grid is cropped from the vanilla half of the supplied demonstration and plays only while visible; reduced motion settings show a still frame. `sources.json` records source timestamps, crop rectangles, frame rate, and playback speed as shown in the supplied demo. The selected GIF loops automatically while visible and stops when outside the viewport. Reduced motion settings show a still frame.
-- Task illustrations: original paper Figures 3 and 4. No extracted video screenshots are used as quantitative-result images. Each simulation task tab shows one cropped rollout GIF from the Immiscible half of the supplied demo. Each humanoid task GIF shows five consecutive rollout rounds before looping, including resets between rounds. The clips exclude comparison panels and numerical overlays; their still frames support reduced motion settings and previews outside the viewport.
+- Task illustrations: original paper Figures 3 and 4. No extracted video screenshots are used as quantitative-result images. Each simulation task tab shows one cropped rollout GIF from the Immiscible half of the supplied demo. Each humanoid task GIF shows five consecutive rollout rounds at 10× speed before looping, including resets between rounds. The banana clip is slowed from the supplied video’s 17× speed; the soda clip retains its original 10× speed. The clips exclude comparison panels and numerical overlays; their still frames support reduced motion settings and previews outside the viewport.
 - Princeton wordmark: author-supplied `University-of-Princeton-Logo.png`, copied unchanged, including the university name.
 - Berkeley wordmark: [logo asset on the CLIFT project page](https://thomaschen98.github.io/clift/static/images/logo_berkeley.svg).
 - UT Austin wordmark: [University of Texas at Austin website asset](https://www.utexas.edu/themes/coresite/coretheme/images/logo.svg).
