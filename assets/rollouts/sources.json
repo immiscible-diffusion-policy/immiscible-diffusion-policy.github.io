@@ -3,10 +3,11 @@
     "source": "../demo.mp4",
     "startSeconds": 70.3,
     "endSeconds": 73.5,
-    "crop": "190:190:1054:220",
+    "crop": "186:186:1056:222",
     "policy": "Immiscible Diffusion Policy",
     "sourcePlaybackSpeed": 3,
-    "fps": 10
+    "fps": 10,
+    "note": "Trimmed the outer plot border; rollout content and playback speed are unchanged."
   },
   "blocks": {
     "source": "../demo.mp4",

@@ -1,14 +1,14 @@
 {
   "source": "../fig3_simulation_tasks.pdf",
   "renderWidth": 2200,
-  "note": "Task panels cropped from Figure 3. Bottom task names and panel letters are excluded.",
+  "note": "Task panels cropped from Figure 3. Bottom task names and panel letters are excluded. The outer Push T plotting frame is trimmed.",
   "tasks": {
     "pusht": {
       "cropPixels": [
-        0,
-        0,
-        396,
-        270
+        3,
+        3,
+        390,
+        264
       ]
     },
     "blocks": {

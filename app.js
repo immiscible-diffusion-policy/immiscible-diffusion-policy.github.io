@@ -26,6 +26,13 @@ function renderRollout(task) {
     illustrationImage.width = task.illustration.width;
     illustrationImage.height = task.illustration.height;
   }
+  const media = document.querySelector('.task-media');
+  const rolloutRatio = task.rollout.width / task.rollout.height;
+  const illustrationRatio = task.illustration ? task.illustration.width / task.illustration.height : 0;
+  // Equal visual height, native proportions, and one consistent gap between images.
+  media.style.setProperty('--illustration-column', `${illustrationRatio || 1}fr`);
+  media.style.setProperty('--rollout-column', `${rolloutRatio}fr`);
+  media.style.setProperty('--media-width', `${160 * (illustrationRatio + rolloutRatio) + (task.illustration ? 12 : 0)}px`);
   activeRollout = task.rollout;
   rolloutImage.alt = activeRollout.count
     ? `${activeRollout.count} example Immiscible Diffusion Policy rollouts for ${task.name}`
@@ -115,7 +122,7 @@ tabs.forEach((tab,index) => {
     }
   });
 });
-fetch('data/results.json?v=task-panels-1', {cache: 'no-cache'}).then(response => {
+fetch('data/results.json?v=task-panels-2', {cache: 'no-cache'}).then(response => {
   if (!response.ok) throw new Error('Unable to load results');
   return response.json();
 }).then(data => { tasks = data.tasks; renderTask(selectedTask); }).catch(() => {

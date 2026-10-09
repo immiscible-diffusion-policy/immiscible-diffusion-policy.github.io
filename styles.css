@@ -18,16 +18,16 @@
 .mode-legend{gap:6px 15px}
 @media(max-width:500px){.task-modality-context{padding:0 18px 18px}.task-modality-context ul{grid-template-columns:1fr;font-size:14px}}
 
-.task-introduction{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:24px;align-items:center;margin:0 28px 22px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.task-introduction{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:24px;align-items:center;margin:0 28px 22px;padding-bottom:22px;border-bottom:1px solid var(--line)}
 .task-introduction.has-task-illustration{grid-template-columns:minmax(0,1fr) minmax(0,500px)}
 .task-introduction .task-modality-context{padding:0;margin:0;border:0}
 .task-introduction .task-modality-context ul{grid-template-columns:1fr}
-.task-media{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;width:100%;max-width:500px;align-items:center}
-.has-task-illustration .task-media{grid-template-columns:repeat(2,minmax(0,1fr))}
-.task-rollout,.task-illustration{min-width:0;width:100%}
-.task-media img{width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:3px}
+.task-media{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;width:var(--media-width,408.36px);max-width:100%;align-items:start;justify-self:end}
+.has-task-illustration .task-media{grid-template-columns:minmax(0,var(--illustration-column,1.477273fr)) minmax(0,var(--rollout-column,1fr))}
+.task-rollout,.task-illustration{min-width:0;width:100%;margin:0}
+.task-media img{width:100%;height:auto;border:0;border-radius:0;background:transparent}
 @media(max-width:900px){.task-introduction.has-task-illustration{grid-template-columns:1fr;gap:18px}.has-task-illustration .task-media{justify-self:center}}
-@media(max-width:600px){.task-introduction{grid-template-columns:1fr;margin-inline:18px;gap:18px}.task-media{justify-self:center;max-width:250px}.has-task-illustration .task-media{max-width:500px;gap:10px}}
+@media(max-width:600px){.task-introduction{grid-template-columns:1fr;margin-inline:18px;gap:18px}.task-media{justify-self:center}}
 
 .paper-section{border-top:1px solid var(--line);padding-top:30px;margin-top:34px}
 .paper-section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:20px}
