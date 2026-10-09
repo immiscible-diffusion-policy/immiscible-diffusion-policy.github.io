@@ -1,0 +1,79 @@
+{
+  "pusht": {
+    "source": "../demo.mp4",
+    "startSeconds": 70.3,
+    "endSeconds": 73.5,
+    "crop": "190:190:1054:220",
+    "policy": "Immiscible Diffusion Policy",
+    "sourcePlaybackSpeed": 3,
+    "fps": 10
+  },
+  "blocks": {
+    "source": "../demo.mp4",
+    "startSeconds": 80.3,
+    "endSeconds": 88.7,
+    "crop": "258:194:1018:218",
+    "policy": "Immiscible Diffusion Policy",
+    "sourcePlaybackSpeed": 3,
+    "fps": 10
+  },
+  "bread": {
+    "source": "../demo.mp4",
+    "startSeconds": 88.9,
+    "endSeconds": 97.9,
+    "crop": "258:194:1018:218",
+    "policy": "Immiscible Diffusion Policy",
+    "sourcePlaybackSpeed": 2,
+    "fps": 10
+  },
+  "shoe": {
+    "source": "../demo.mp4",
+    "startSeconds": 98.3,
+    "endSeconds": 105.3,
+    "crop": "372:280:1032:218",
+    "policy": "Immiscible Diffusion Policy",
+    "sourcePlaybackSpeed": 4,
+    "fps": 10
+  },
+  "qrcode": {
+    "source": "../demo.mp4",
+    "startSeconds": 105.5,
+    "endSeconds": 110.5,
+    "crop": "372:280:1032:218",
+    "policy": "Immiscible Diffusion Policy",
+    "sourcePlaybackSpeed": 5,
+    "fps": 10
+  },
+  "fruit": {
+    "source": "../demo.mp4",
+    "startSeconds": 62.8,
+    "endSeconds": 68.0,
+    "crop": "864:486:1008:290",
+    "policy": "Immiscible Diffusion Policy",
+    "sourcePlaybackSpeed": 17,
+    "fps": 10,
+    "rollouts": 5
+  },
+  "can": {
+    "source": "../demo.mp4",
+    "startSeconds": 50.0,
+    "endSeconds": 59.4,
+    "crop": "864:486:1008:290",
+    "policy": "Immiscible Diffusion Policy",
+    "sourcePlaybackSpeed": 10,
+    "fps": 10,
+    "rollouts": 5
+  },
+  "pusht_vanilla_collapse": {
+    "source": "../demo.mp4",
+    "startSeconds": 70.3,
+    "endSeconds": 78.3,
+    "crop": "764:606:92:219",
+    "policy": "Vanilla Diffusion Policy",
+    "rollouts": 9,
+    "direction": "counterclockwise",
+    "sourcePlaybackSpeed": 3,
+    "fps": 20,
+    "format": "mp4"
+  }
+}

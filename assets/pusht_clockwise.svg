@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="420" viewBox="40 65 420 420" role="img" aria-labelledby="title description"><title id="title">Push T: clockwise rotation</title><desc id="description">The experimental initial object, target, and pusher positions with a schematic clockwise pushing path.</desc><defs>
+<marker id="arrow-cw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#376faf" /></marker>
+<marker id="arrow-ccw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#bd7629" /></marker>
+</defs>
+<g transform="translate(0 0)" font-family="Arial, Helvetica, sans-serif">
+<g transform="translate(40 65) scale(2.9166666667)">
+<rect x="0" y="0.096515" width="144" height="143.806971" fill="white" stroke="#dedfe2" stroke-width=".4" />
+<path d="M 49.443961 61.894363  L 82.202152 94.652554  L 74.012604 102.842102  L 61.728282 90.55778  L 37.159639 115.126423  L 28.970092 106.936875  L 53.538735 82.368232  L 41.254413 70.083911  z " style="fill: #c6e7c3" />
+<path d="M 89.992822 86.861884  L 57.234631 54.103693  L 65.424179 45.914145  L 77.7085 58.198467  L 102.277144 33.629824  L 110.466691 41.819371  L 85.898048 66.388014  L 98.18237 78.672336  z " style="fill: #d7dde5; stroke: #bec8d4; stroke-width: 0.35" />
+<path d="M 131.646113 12.450402 C 143 40 143 74 125 92 C 114 103 97 106 85 102" fill="none" stroke="white" stroke-width="3.5" />
+<path d="M 131.646113 12.450402 C 143 40 143 74 125 92 C 114 103 97 106 85 102" fill="none" stroke="#376faf" stroke-width="1.35" stroke-linecap="round" marker-end="url(#arrow-cw)" />
+<path d="M 131.646113 6.659517  C 133.181873 6.659517 134.65494 7.269682 135.740886 8.355628  C 136.826833 9.441575 137.436997 10.914642 137.436997 12.450402  C 137.436997 13.986163 136.826833 15.459229 135.740886 16.545176  C 134.65494 17.631123 133.181873 18.241287 131.646113 18.241287  C 130.110352 18.241287 128.637285 17.631123 127.551339 16.545176  C 126.465392 15.459229 125.855228 13.986163 125.855228 12.450402  C 125.855228 10.914642 126.465392 9.441575 127.551339 8.355628  C 128.637285 7.269682 130.110352 6.659517 131.646113 6.659517  z " style="fill: #aabff3; stroke: #8098e4; stroke-width: 0.35; stroke-linejoin: miter" />
+</g>
+</g></svg>

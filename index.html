@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#243db5">
+  <title>Immiscible Diffusion Policy: Preserving Multimodal Robot Actions</title>
+  <meta name="description" content="Official project page for Immiscible Diffusion Policy: Preserving Multimodal Robot Actions through Label-Free Noise Assignment. Method, robot demonstrations, and experimental results. Under review for ICRA 2027.">
+  <link rel="canonical" href="https://immiscible-diffusion-policy.github.io/">
+  <meta property="og:title" content="Immiscible Diffusion Policy">
+  <meta property="og:description" content="Preserving Multimodal Robot Actions through Label-Free Noise Assignment. Official project website.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://immiscible-diffusion-policy.github.io/">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><nav aria-label="Main navigation"><a href="#overview">Problem</a><a href="#collapse">Collapse</a><a href="#method">Method</a><a href="#experiments">Experiments</a><a href="#results">Results</a><a href="#conclusion">Conclusion</a><a href="#citation">BibTeX</a></nav></header>
+<main id="main">
+  <section class="hero container" id="top" aria-labelledby="paper-title">
+    
+    <h1 id="paper-title">Immiscible Diffusion Policy</h1>
+    <p class="paper-subtitle">Preserving Multimodal Robot Actions<br>through Label-Free Noise Assignment</p>
+    <p class="publication-status">Under review for ICRA 2027</p>
+    <div class="authors" aria-label="Paper authors">
+      <span>Xiao Zhang<sup>1,*</sup></span><span>Yuxin Chen<sup>1,*</sup></span><span>Zhixuan Liang<sup>2,*</sup></span><span>Guojian Zhan<sup>1</sup></span><span>Chenran Li<sup>1</sup></span><span>Chenfeng Xu<sup>3</sup></span><span>Masayoshi Tomizuka<sup>1</sup></span><span>Yiheng Li<sup>1</sup></span>
+    </div>
+    <p class="affiliation-text"><span><sup>1</sup> University of California, Berkeley</span><span><sup>2</sup> Princeton University</span><span><sup>3</sup> The University of Texas at Austin</span></p>
+    <p class="equal-note">* Equal contribution</p>
+    <div class="affiliation-logos" aria-label="Author affiliations">
+      <a href="https://www.berkeley.edu/" aria-label="University of California, Berkeley"><img class="berkeley-logo" src="assets/logos/berkeley.svg" alt="Berkeley, University of California" width="215" height="68"></a>
+      <a href="https://www.princeton.edu/" aria-label="Princeton University"><img class="princeton-logo" src="assets/logos/princeton.png" alt="Princeton University" width="3840" height="2160"></a>
+      <a href="https://www.utexas.edu/" aria-label="The University of Texas at Austin"><img class="texas-logo" src="assets/logos/ut-austin.svg" alt="The University of Texas at Austin" width="1037" height="298"></a>
+    </div>
+    <div class="hero-actions"><a class="button primary" href="assets/paper.pdf">Paper <span>PDF</span></a><a class="button" href="https://github.com/immiscible-diffusion-policy/immiscible-diffusion-policy">Code <span>DP + DP3</span></a><a class="button" href="https://arxiv.org/abs/2610.09369">arXiv</a></div>
+  </section>
+
+    <div class="demo-layout" id="demo"><div class="demo-player"><video id="demo-video" controls playsinline preload="metadata" aria-label="Immiscible Diffusion Policy demonstration video"><source src="assets/demo.mp4" type="video/mp4"><p><a href="assets/demo.mp4">Download the demonstration video</a></p></video></div></div>
+  <section class="section overview-section container" id="overview" aria-labelledby="overview-title">
+    <h2 id="overview-title">Preserving more than one way to act</h2>
+    <div class="overview-layout">
+      <div class="prose">
+        <p>A robot can often complete the same task in several ways: push an object clockwise or counterclockwise, pick it up with either hand, or place it in different valid orientations. A diffusion policy should be able to reproduce these alternatives from the demonstrations.</p>
+        <p>In our experiments, however, the policy can concentrate on a single behavior even when the training data and individual batches are balanced. A different random noise sample does not necessarily produce a different action modality.</p>
+        <p>Retaining those alternatives matters when a change in the environment makes the preferred behavior infeasible. For example, an obstacle may block one pushing direction while leaving the other available. We study how to preserve this diversity without requiring modality labels or changing policy inference.</p>
+      </div>
+      <figure class="modality-overview" aria-label="Two valid Push T rotation directions">
+        <div class="modality-scene"><p>Clockwise</p><img src="assets/pusht_clockwise.svg" alt="Experimental Push T starting scene with an illustrative clockwise pushing path" width="420" height="420"></div>
+        <div class="modality-scene"><p>Counterclockwise</p><img src="assets/pusht_counterclockwise.svg" alt="Experimental Push T starting scene with an illustrative counterclockwise pushing path" width="420" height="420"></div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section collapse-section container" id="collapse" aria-labelledby="collapse-title">
+    <h2 id="collapse-title">Modality collapse in Diffusion Policy</h2>
+    <div class="collapse-layout">
+      <div class="prose">
+        <p><strong>Diffusion policies can exhibit modality collapse even when the demonstration data is well balanced.</strong> Although the demonstrations cover multiple valid behaviors in balanced proportions, the learned policy can concentrate on one behavior or a subset of behaviors. We observe this even when mirrored demonstrations enforce exact symmetry within every training batch.</p>
+        <p>In Push T, vanilla policies assign an average of <strong>97.6% of rollouts to a single modality</strong> across 10 training seeds, with the preferred direction varying across seeds. Eight of the 10 policies generate only one modality across all 50 evaluation rollouts, despite equal representation of both directions in every training batch.</p>
+        <p>The same failure extends across all seven tasks: vanilla policies strongly favor one modality on the simulation tasks with two modalities, lose a modality on both tasks with four modalities, and use only one hand on both humanoid tasks.</p>
+      </div>
+      <figure class="collapse-rollouts"><video id="collapse-video" muted loop playsinline preload="none" poster="assets/rollouts/pusht_vanilla_collapse.png" width="764" height="606" aria-label="Nine vanilla Diffusion Policy rollouts in Push T, all rotating counterclockwise, shown at three times speed"><source src="assets/rollouts/pusht_vanilla_collapse.mp4" type="video/mp4"></video></figure>
+    </div>
+  </section>
+
+  <section class="section method-section" id="method" aria-labelledby="method-title">
+    <div class="container">
+      <div class="section-heading"><h2 id="method-title">Immiscible Diffusion Policy</h2><p>Our analysis connects modality collapse to the way actions are paired with noise during training. Independent pairing can mix diffusion paths from different action modalities, weakening the denoiser’s ability to distinguish them.</p><p>Immiscible Diffusion Policy assigns each action chunk to exactly one noise sample within a training batch. Hungarian matching organizes the mapping from noise to actions, helping distinct modalities remain reachable. The assignment requires no modality labels and leaves the policy architecture and inference procedure unchanged.</p></div>
+      <div class="method-figure"><div id="method-static"><img src="assets/fig1_method_overview.png" alt="Method overview: Hungarian assignment of noise to actions reduces mixing between diffusion paths and preserves clockwise and counterclockwise Push-T behaviors" width="2200" height="1153" loading="lazy"></div></div>
+      <div class="method-steps"><article><span>01</span><h3>Sample noise</h3><p>Draw one Gaussian noise sample per action chunk. Standardize the action coordinates across the batch for computing the matching cost.</p></article><article><span>02</span><h3>Match one to one</h3><p>Use Hungarian assignment to minimize total Euclidean distance between action chunks and noise. Every noise sample is used exactly once.</p></article><article><span>03</span><h3>Train as usual</h3><p>Use the reassigned noise in the diffusion objective. Keep the policy architecture, observation conditioning, and inference procedure unchanged.</p></article></div>
+      <div class="method-bottom"><p>The assignment minimizes the sum of Euclidean distances between flattened action chunks standardized across the batch and the sampled noise. Standardization is used only to compute this cost; the diffusion objective uses the original normalized actions.</p><div class="equation" aria-label="Optimal permutation minimizes the sum of Euclidean distances between standardized action chunks and assigned noise"><span>π* = arg min<sub>π ∈ S<sub>B</sub></sub> ∑<sub>i = 1</sub><sup>B</sup> ‖ã<sub>i</sub> − ε<sub>π(i)</sub>‖<sub>2</sub></span><p>π permutes the B noise samples in a training batch.</p></div></div>
+    </div>
+  </section>
+
+  <section class="section experiments-section container" id="experiments" aria-labelledby="experiments-title">
+    <div class="section-heading"><h2 id="experiments-title">Tasks and robot experiments</h2><p>We evaluate five simulation tasks and two tasks on a Unitree G1 humanoid, using Diffusion Policy (DP) and 3D Diffusion Policy (DP3). The experiments span state, RGB, and point cloud observations, with two or four valid modalities defined by pushing direction, arm choice, placement orientation, or rotation direction.</p></div>
+    <figure class="simulation-figure"><a href="assets/fig3_simulation_tasks.pdf"><img src="assets/fig3_simulation_tasks.png" alt="Simulation task configurations and valid modalities for Push-T, Stack Blocks, Place Bread, Place Shoe, and Rotate QR Code" loading="lazy" width="2200" height="312"></a></figure>
+    <div class="humanoid-experiment">
+      <figure><img src="assets/fig4_humanoid_tasks.png" alt="Unitree G1 task setups and execution with either arm for Fruit-to-Plate and Can-to-Bin" width="2200" height="1991" loading="lazy"><figcaption>Fruit-to-Plate and Can-to-Bin on the Unitree G1.</figcaption></figure>
+      <div><h3>Humanoid manipulation</h3><p>The G1 places a banana on a plate or a can in a bin. Each task admits execution with either hand, and the demonstrations include both behaviors.</p><p>Vanilla and Immiscible policies use the same demonstrations, architecture, and evaluation settings. We classify each rollout by its attempted modality, independently of whether it succeeds, and report modality frequency alongside task performance.</p></div>
+    </div>
+
+  </section>
+
+  <section class="section results-section" id="results" aria-labelledby="results-title">
+    <div class="container">
+      <div class="section-heading"><h2 id="results-title">Experimental results</h2><p>We evaluate how often each demonstrated modality appears in policy rollouts. Across the three simulation tasks with two modes, Immiscible increases the frequency of the minority mode by 6.0 to 14.6 times. On both tasks with four modes, it recovers a modality that is absent from vanilla rollouts. On each G1 task, both hand modalities appear in a 50:50 split.</p></div>
+      <div class="results-explorer">
+        <div class="task-tabs" role="tablist" aria-label="Select an experimental task"><button class="task-tab" type="button" role="tab" id="tab-pusht" aria-controls="result-panel" aria-selected="true" tabindex="0" data-task="pusht">Push-T</button><button class="task-tab" type="button" role="tab" id="tab-blocks" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="blocks">Stack Blocks</button><button class="task-tab" type="button" role="tab" id="tab-bread" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="bread">Place Bread</button><button class="task-tab" type="button" role="tab" id="tab-shoe" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="shoe">Place Shoe</button><button class="task-tab" type="button" role="tab" id="tab-qrcode" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="qrcode">Rotate QR Code</button><button class="task-tab" type="button" role="tab" id="tab-fruit" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="fruit">Fruit-to-Plate</button><button class="task-tab" type="button" role="tab" id="tab-can" aria-controls="result-panel" aria-selected="false" tabindex="-1" data-task="can">Can-to-Bin</button></div>
+        <div id="result-panel" role="tabpanel" aria-labelledby="tab-pusht" tabindex="0">
+          <div class="result-top"><div><p class="result-meta" id="result-meta">Simulation</p><h3 id="task-title">Push-T</h3></div></div>
+          <div class="task-introduction">
+            <div class="task-modality-context"><h4>Behaviors in this task</h4><ul id="task-modalities"><li>Clockwise pushing</li><li>Counterclockwise pushing</li></ul></div>
+            <figure class="task-rollout"><img id="task-rollout-image" src="assets/rollouts/pusht.png" alt="Example Immiscible Diffusion Policy rollout for Push-T" width="240" height="240" loading="lazy"></figure>
+          </div>
+          <div class="result-body">
+            <div class="distribution"><p class="chart-heading">Rollout modality distribution <span>% of rollouts</span></p><div id="distribution-bars"></div><div id="mode-legend" class="mode-legend"></div></div>
+            <aside class="result-interpretation"><h4 id="takeaway">The minority behavior occurs 14.6 times as often.</h4><p id="result-description">The less frequent mode rises from 2.40% to 35.00%, while task coverage stays at approximately 95%.</p><div class="performance"><span id="performance-title">Task coverage</span><div><span>Vanilla <strong id="vanilla-performance">95.16%</strong></span><span>Immiscible <strong id="ours-performance">95.39%</strong></span></div></div></aside>
+          </div>
+        </div>
+      </div>
+      <section class="paper-section" id="training-results" aria-labelledby="training-results-title"><div class="paper-section-heading"><h3 id="training-results-title">Modality preservation during training</h3><p>Figure 5</p></div><figure><a href="assets/fig5_modality_training.pdf"><img src="assets/fig5_modality_training.png" alt="Training curves show ratios of the dominant mode for three tasks with two modes and modality composition for two tasks with four modes; dashed lines mark assignment activation" loading="lazy" width="2200" height="1034"></a><figcaption>Dashed lines mark when noise assignment is activated. Results average the training seeds reported in Table I; shaded regions in the upper plots show standard error.</figcaption></figure><div class="training-explanation">
+        <p><strong>Upper plots: how strongly the policy favors one behavior.</strong> For the three tasks with two modalities, the curves show the fraction of rollouts assigned to the dominant modality. A value near 1 means nearly every rollout follows the same behavior; 0.5 represents equal use of both behaviors. As training progresses, vanilla Diffusion Policy increasingly favors one modality. After noise assignment is activated, Immiscible keeps more rollouts in the alternative modality.</p>
+        <p><strong>Lower plots: which behaviors remain available.</strong> For Place Shoe and Rotate QR Code, each colored band shows the fraction of rollouts using one of the four modalities. A band that shrinks to zero indicates that the corresponding behavior is no longer generated. Vanilla loses a demonstrated modality in both tasks, while Immiscible preserves all four with a more balanced distribution. These plots measure behavioral diversity over training; task coverage and success are reported separately in the table below.</p>
+      </div></section>
+      <section class="paper-section" id="all-results" aria-labelledby="all-results-title"><div class="paper-section-heading"><h3 id="all-results-title">All task results</h3><p>Table I</p></div><div class="table-scroll"><table><caption>Table I. Expert data lists the demonstration proportions reported in the paper. Policy results are percentages, reported as mean ± standard error across training seeds. Rollout frequencies are ordered under vanilla, with the same order retained for Immiscible; the physical behavior at each rank can vary across seeds. The G1 tasks use one seed, so no standard error is reported.</caption><thead><tr><th scope="col">Task</th><th scope="col">Expert data (%)</th><th scope="col">Policy</th><th scope="col">Frequencies in vanilla order (%)</th><th scope="col">Task metric (%)</th><th scope="col">Seeds</th></tr></thead><tbody><tr><th scope="row">Push-T</th><td class="expert-values" rowspan="2">43.1 / 56.9</td><td>Vanilla</td><td class="frequency-values"><span class="table-value">97.60 ± 1.62</span> / <span class="table-value">2.40 ± 1.62</span></td><td>Coverage: 95.16 ± 0.30</td><td>10</td></tr>
+<tr><th scope="row">Push-T</th><td>Immiscible</td><td class="frequency-values"><span class="table-value">65.00 ± 7.64</span> / <span class="table-value">35.00 ± 7.64</span></td><td>Coverage: 95.39 ± 0.10</td><td>10</td></tr>
+<tr><th scope="row">Stack Blocks</th><td class="expert-values" rowspan="2">50.0 / 50.0</td><td>Vanilla</td><td class="frequency-values"><span class="table-value">96.67 ± 2.72</span> / <span class="table-value">3.33 ± 2.72</span></td><td>Success: 96.67 ± 2.72</td><td>3</td></tr>
+<tr><th scope="row">Stack Blocks</th><td>Immiscible</td><td class="frequency-values"><span class="table-value">80.00 ± 0.00</span> / <span class="table-value">20.00 ± 0.00</span></td><td>Success: 96.67 ± 2.72</td><td>3</td></tr>
+<tr><th scope="row">Place Bread</th><td class="expert-values" rowspan="2">51.0 / 49.0</td><td>Vanilla</td><td class="frequency-values"><span class="table-value">95.56 ± 3.63</span> / <span class="table-value">4.44 ± 3.63</span></td><td>Success: 100.00 ± 0.00</td><td>3</td></tr>
+<tr><th scope="row">Place Bread</th><td>Immiscible</td><td class="frequency-values"><span class="table-value">66.67 ± 8.31</span> / <span class="table-value">33.33 ± 8.31</span></td><td>Success: 97.78 ± 1.81</td><td>3</td></tr>
+<tr><th scope="row">Place Shoe</th><td class="expert-values" rowspan="2">25.7 / 23.8 / 24.3 / 26.2</td><td>Vanilla</td><td class="frequency-values"><span class="table-value">37.80 ± 14.50</span> / <span class="table-value">37.80 ± 15.50</span> / <span class="table-value">24.40 ± 1.80</span> / <span class="table-value">0.00 ± 0.00</span></td><td>Success: 100.00 ± 0.00</td><td>3</td></tr>
+<tr><th scope="row">Place Shoe</th><td>Immiscible</td><td class="frequency-values"><span class="table-value">24.92 ± 1.75</span> / <span class="table-value">29.68 ± 4.89</span> / <span class="table-value">29.37 ± 5.53</span> / <span class="table-value">16.03 ± 8.16</span></td><td>Success: 93.33 ± 3.14</td><td>3</td></tr>
+<tr><th scope="row">Rotate QR Code</th><td class="expert-values" rowspan="2">23.3 / 24.8 / 26.7 / 25.2</td><td>Vanilla</td><td class="frequency-values"><span class="table-value">57.80 ± 11.90</span> / <span class="table-value">35.60 ± 12.70</span> / <span class="table-value">6.70 ± 3.10</span> / <span class="table-value">0.00 ± 0.00</span></td><td>Success: 86.67 ± 5.44</td><td>3</td></tr>
+<tr><th scope="row">Rotate QR Code</th><td>Immiscible</td><td class="frequency-values"><span class="table-value">44.40 ± 9.60</span> / <span class="table-value">17.80 ± 6.50</span> / <span class="table-value">26.70 ± 6.30</span> / <span class="table-value">11.10 ± 6.50</span></td><td>Success: 73.33 ± 3.14</td><td>3</td></tr>
+<tr><th scope="row">Fruit-to-Plate</th><td class="expert-values" rowspan="2">50.0 / 50.0</td><td>Vanilla</td><td class="frequency-values"><span class="table-value">100.00</span> / <span class="table-value">0.00</span></td><td>Success: 75.00</td><td>1</td></tr>
+<tr><th scope="row">Fruit-to-Plate</th><td>Immiscible</td><td class="frequency-values"><span class="table-value">50.00</span> / <span class="table-value">50.00</span></td><td>Success: 60.00</td><td>1</td></tr>
+<tr><th scope="row">Can-to-Bin</th><td class="expert-values" rowspan="2">50.0 / 50.0</td><td>Vanilla</td><td class="frequency-values"><span class="table-value">100.00</span> / <span class="table-value">0.00</span></td><td>Success: 100.00</td><td>1</td></tr>
+<tr><th scope="row">Can-to-Bin</th><td>Immiscible</td><td class="frequency-values"><span class="table-value">50.00</span> / <span class="table-value">50.00</span></td><td>Success: 90.00</td><td>1</td></tr></tbody></table></div></section>
+    </div>
+  </section>
+
+  <section class="section conclusion-section container" id="conclusion" aria-labelledby="conclusion-title">
+    <h2 id="conclusion-title">Conclusion</h2>
+    <div class="prose">
+      <p>We identify action modality collapse as an important limitation of diffusion policies for robotic action generation. Policies can concentrate on a single modality or a subset of modalities even when demonstrations are balanced and symmetry is enforced within every training batch. Our analysis connects this behavior to independent pairing of actions and noise, which increases the mixing and crossing of diffusion paths and weakens the denoiser’s sensitivity to differences between modalities in clustered action spaces of low dimensionality.</p>
+      <p>Immiscible Diffusion Policy addresses this issue by coupling action chunks with noise samples during training, without modality labels or changes to the policy architecture or inference procedure. Across simulation and real world tasks, it improves modality preservation while maintaining strong task performance, preserving suppressed behaviors and recovering valid modalities absent from vanilla rollouts. These results show that explicit coupling between actions and noise offers a simple and broadly applicable approach to preserving action multimodality in robot planning with diffusion policies.</p>
+    </div>
+  </section>
+
+  <section class="implementation-section container" aria-label="Code and implementation"><div class="implementation-note"><div><h3>Code and implementation</h3></div><p>The official code includes the assignment algorithm, integrated training backends, and an optional G1 deployment module. Datasets and pretrained checkpoints are not included.</p><a class="button" href="https://github.com/immiscible-diffusion-policy/immiscible-diffusion-policy">Explore the code</a></div></section>
+
+  <section class="citation-section" id="citation" aria-labelledby="citation-title"><div class="container citation-grid"><div><h2 id="citation-title">BibTeX</h2><p>Immiscible Diffusion Policy<br>Under review for ICRA 2027.</p><a class="text-link" href="https://arxiv.org/abs/2610.09369">arXiv:2610.09369</a></div><div class="citation-box"><div><span>BIBTEX</span><button type="button" id="copy-citation">Copy citation</button></div><pre><code id="bibtex">@article{zhang2026immiscible,
+  title={Immiscible Diffusion Policy: Preserving Multimodal Robot Actions
+         through Label-Free Noise Assignment},
+  author={Zhang, Xiao and Chen, Yuxin and Liang, Zhixuan and Zhan, Guojian
+          and Li, Chenran and Xu, Chenfeng and Tomizuka, Masayoshi and Li, Yiheng},
+  journal={arXiv preprint arXiv:2610.09369},
+  year={2026}
+}</code></pre><p id="copy-status" role="status" aria-live="polite"></p><a class="citation-download" href="citation.bib" download>Download .bib</a></div></div></section>
+</main>
+<footer class="container footer"><span>Official project page · Immiscible Diffusion Policy · 2026</span><span>UC Berkeley · Princeton · UT Austin</span><a href="#top">Back to top</a></footer>
+<noscript><p class="container">Interactive task selection requires JavaScript. The complete results remain available in the “All task results” table and paper.</p></noscript>
+</body>
+</html>

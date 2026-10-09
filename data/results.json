@@ -1,0 +1,431 @@
+{
+  "source": "Paper Table I, arXiv:2610.09369v1",
+  "note": "Percentages are paper-reported means; standard errors are across seeds. Mode indices are ordered by vanilla frequency, not fixed physical directions. Rounded means need not sum to exactly 100%. Expert data percentages are copied in the order reported in Table I; they are dataset proportions, not rollout means across training seeds.",
+  "tasks": [
+    {
+      "id": "pusht",
+      "name": "Push-T",
+      "environment": "Simulation",
+      "modes": 2,
+      "seeds": 10,
+      "vanilla": [
+        97.6,
+        2.4
+      ],
+      "ours": [
+        65,
+        35
+      ],
+      "vanillaSE": [
+        1.62,
+        1.62
+      ],
+      "oursSE": [
+        7.64,
+        7.64
+      ],
+      "metric": "Coverage",
+      "performance": [
+        95.16,
+        95.39
+      ],
+      "performanceSE": [
+        0.3,
+        0.1
+      ],
+      "tv": [
+        47.6,
+        15
+      ],
+      "takeaway": "The minority behavior occurs 14.6 times as often.",
+      "description": "The less frequent mode rises from 2.40% to 35.00%, while task coverage stays at approximately 95%.",
+      "time": 70.3,
+      "modalities": [
+        "Clockwise pushing",
+        "Counterclockwise pushing"
+      ],
+      "modalityDescription": "The object shaped like a T can reach its target by rotating in either direction.",
+      "frequencyLabels": [
+        "Dominant modality",
+        "Non dominant modality"
+      ],
+      "frequencyNote": "The paper aggregates the dominant and alternative behaviors identified for each vanilla training seed. The dominant behavior can differ across seeds; colors therefore identify frequency groups, not fixed physical behaviors.",
+      "rollout": {
+        "gif": "assets/rollouts/pusht.gif",
+        "still": "assets/rollouts/pusht.png",
+        "width": 240,
+        "height": 240
+      },
+      "expertData": [
+        43.1,
+        56.9
+      ]
+    },
+    {
+      "id": "blocks",
+      "name": "Stack Blocks",
+      "environment": "Simulation",
+      "modes": 2,
+      "seeds": 3,
+      "vanilla": [
+        96.67,
+        3.33
+      ],
+      "ours": [
+        80,
+        20
+      ],
+      "vanillaSE": [
+        2.72,
+        2.72
+      ],
+      "oursSE": [
+        0,
+        0
+      ],
+      "metric": "Success",
+      "performance": [
+        96.67,
+        96.67
+      ],
+      "performanceSE": [
+        2.72,
+        2.72
+      ],
+      "tv": [
+        46.67,
+        30
+      ],
+      "takeaway": "The minority mode increases from 3.33% to 20%.",
+      "description": "The less frequent mode increases from 3.33% to 20.00%, with unchanged overall success.",
+      "time": 80.3,
+      "modalities": [
+        "Left arm picks first",
+        "Right arm picks first"
+      ],
+      "modalityDescription": "The two behaviors differ in which arm first picks up a block.",
+      "frequencyLabels": [
+        "Dominant modality",
+        "Non dominant modality"
+      ],
+      "frequencyNote": "The paper aggregates the dominant and alternative behaviors identified for each vanilla training seed. The dominant behavior can differ across seeds; colors therefore identify frequency groups, not fixed physical behaviors.",
+      "rollout": {
+        "gif": "assets/rollouts/blocks.gif",
+        "still": "assets/rollouts/blocks.png",
+        "width": 320,
+        "height": 241
+      },
+      "expertData": [
+        50.0,
+        50.0
+      ]
+    },
+    {
+      "id": "bread",
+      "name": "Place Bread",
+      "environment": "Simulation",
+      "modes": 2,
+      "seeds": 3,
+      "vanilla": [
+        95.56,
+        4.44
+      ],
+      "ours": [
+        66.67,
+        33.33
+      ],
+      "vanillaSE": [
+        3.63,
+        3.63
+      ],
+      "oursSE": [
+        8.31,
+        8.31
+      ],
+      "metric": "Success",
+      "performance": [
+        100,
+        97.78
+      ],
+      "performanceSE": [
+        0,
+        1.81
+      ],
+      "tv": [
+        45.56,
+        16.67
+      ],
+      "takeaway": "The minority mode increases from 4.44% to 33.33%.",
+      "description": "The less frequent mode rises from 4.44% to 33.33%. Overall success changes from 100.00% to 97.78%.",
+      "time": 88.9,
+      "modalities": [
+        "Left arm places bread first",
+        "Right arm places bread first"
+      ],
+      "modalityDescription": "Both arms grasp bread; the behavior is defined by which arm places its bread into the basket first.",
+      "frequencyLabels": [
+        "Dominant modality",
+        "Non dominant modality"
+      ],
+      "frequencyNote": "The paper aggregates the dominant and alternative behaviors identified for each vanilla training seed. The dominant behavior can differ across seeds; colors therefore identify frequency groups, not fixed physical behaviors.",
+      "rollout": {
+        "gif": "assets/rollouts/bread.gif",
+        "still": "assets/rollouts/bread.png",
+        "width": 320,
+        "height": 241
+      },
+      "expertData": [
+        51.0,
+        49.0
+      ]
+    },
+    {
+      "id": "shoe",
+      "name": "Place Shoe",
+      "environment": "Simulation",
+      "modes": 4,
+      "seeds": 3,
+      "vanilla": [
+        37.8,
+        37.8,
+        24.4,
+        0
+      ],
+      "ours": [
+        24.92,
+        29.68,
+        29.37,
+        16.03
+      ],
+      "vanillaSE": [
+        14.5,
+        15.5,
+        1.8,
+        0
+      ],
+      "oursSE": [
+        1.75,
+        4.89,
+        5.53,
+        8.16
+      ],
+      "metric": "Success",
+      "performance": [
+        100,
+        93.33
+      ],
+      "performanceSE": [
+        0,
+        3.14
+      ],
+      "tv": [
+        38.33,
+        13.57
+      ],
+      "takeaway": "All four demonstrated modes appear in rollouts.",
+      "description": "All four demonstrated modalities appear. The mode absent from vanilla rollouts accounts for 16.03% of Immiscible rollouts.",
+      "time": 98.3,
+      "modalities": [
+        "Left arm + clockwise rotation",
+        "Left arm + counterclockwise rotation",
+        "Right arm + clockwise rotation",
+        "Right arm + counterclockwise rotation"
+      ],
+      "modalityDescription": "Arm choice and shoe rotation direction combine to give four valid placement behaviors.",
+      "frequencyLabels": [
+        "Most frequent in vanilla",
+        "Second in vanilla",
+        "Third in vanilla",
+        "Absent in vanilla"
+      ],
+      "frequencyNote": "Percentages follow the paper’s ordering of frequencies under vanilla, retained for Immiscible. The aggregate table does not identify a fixed combination of arm and rotation direction for each column; colors indicate this ordering.",
+      "rollout": {
+        "gif": "assets/rollouts/shoe.gif",
+        "still": "assets/rollouts/shoe.png",
+        "width": 320,
+        "height": 241
+      },
+      "expertData": [
+        25.7,
+        23.8,
+        24.3,
+        26.2
+      ]
+    },
+    {
+      "id": "qrcode",
+      "name": "Rotate QR Code",
+      "environment": "Simulation",
+      "modes": 4,
+      "seeds": 3,
+      "vanilla": [
+        57.8,
+        35.6,
+        6.7,
+        0
+      ],
+      "ours": [
+        44.4,
+        17.8,
+        26.7,
+        11.1
+      ],
+      "vanillaSE": [
+        11.9,
+        12.7,
+        3.1,
+        0
+      ],
+      "oursSE": [
+        9.6,
+        6.5,
+        6.3,
+        6.5
+      ],
+      "metric": "Success",
+      "performance": [
+        86.67,
+        73.33
+      ],
+      "performanceSE": [
+        5.44,
+        3.14
+      ],
+      "tv": [
+        49.44,
+        28.33
+      ],
+      "takeaway": "The previously absent mode reaches 11.1%.",
+      "description": "Immiscible recovers a fourth mode absent from vanilla rollouts and increases another suppressed mode from 6.70% to 26.70%.",
+      "time": 105.5,
+      "modalities": [
+        "Left arm + clockwise rotation",
+        "Left arm + counterclockwise rotation",
+        "Right arm + clockwise rotation",
+        "Right arm + counterclockwise rotation"
+      ],
+      "modalityDescription": "Either arm can grasp the QR code and rotate it clockwise or counterclockwise, viewed from above.",
+      "frequencyLabels": [
+        "Most frequent in vanilla",
+        "Second in vanilla",
+        "Third in vanilla",
+        "Absent in vanilla"
+      ],
+      "frequencyNote": "Percentages follow the paper’s ordering of frequencies under vanilla, retained for Immiscible. The aggregate table does not identify a fixed combination of arm and rotation direction for each column; colors indicate this ordering.",
+      "rollout": {
+        "gif": "assets/rollouts/qrcode.gif",
+        "still": "assets/rollouts/qrcode.png",
+        "width": 320,
+        "height": 241
+      },
+      "expertData": [
+        23.3,
+        24.8,
+        26.7,
+        25.2
+      ]
+    },
+    {
+      "id": "fruit",
+      "name": "Fruit-to-Plate",
+      "environment": "Real G1 humanoid",
+      "modes": 2,
+      "seeds": 1,
+      "vanilla": [
+        100,
+        0
+      ],
+      "ours": [
+        50,
+        50
+      ],
+      "vanillaSE": null,
+      "oursSE": null,
+      "metric": "Success",
+      "performance": [
+        75,
+        60
+      ],
+      "performanceSE": null,
+      "tv": [
+        50,
+        0
+      ],
+      "takeaway": "Both hand modalities reach a 50:50 split.",
+      "description": "The evaluated rollouts change from one hand only to a 50:50 split. Overall success changes from 75% to 60%.",
+      "time": 62.8,
+      "modalities": [
+        "Placement with the left hand",
+        "Placement with the right hand"
+      ],
+      "modalityDescription": "The G1 can place the banana on the plate using either hand.",
+      "frequencyLabels": [
+        "Dominant modality",
+        "Non dominant modality"
+      ],
+      "frequencyNote": "The paper reports the hand selected by vanilla first and the other hand second, without identifying the selected hand as left or right. Immiscible uses each hand in 50% of rollouts.",
+      "rollout": {
+        "gif": "assets/rollouts/fruit.gif",
+        "still": "assets/rollouts/fruit.png",
+        "width": 320,
+        "height": 180,
+        "count": 5
+      },
+      "expertData": [
+        50.0,
+        50.0
+      ]
+    },
+    {
+      "id": "can",
+      "name": "Can-to-Bin",
+      "environment": "Real G1 humanoid",
+      "modes": 2,
+      "seeds": 1,
+      "vanilla": [
+        100,
+        0
+      ],
+      "ours": [
+        50,
+        50
+      ],
+      "vanillaSE": null,
+      "oursSE": null,
+      "metric": "Success",
+      "performance": [
+        100,
+        90
+      ],
+      "performanceSE": null,
+      "tv": [
+        50,
+        0
+      ],
+      "takeaway": "Both hand modalities reach a 50:50 split.",
+      "description": "Both hand modalities are preserved in a 50:50 split across the evaluated rollouts. Overall success changes from 100% to 90%.",
+      "time": 50.3,
+      "modalities": [
+        "Placement with the left hand",
+        "Placement with the right hand"
+      ],
+      "modalityDescription": "The G1 can place the can in the bin using either hand.",
+      "frequencyLabels": [
+        "Dominant modality",
+        "Non dominant modality"
+      ],
+      "frequencyNote": "The paper reports the hand selected by vanilla first and the other hand second, without identifying the selected hand as left or right. Immiscible uses each hand in 50% of rollouts.",
+      "rollout": {
+        "gif": "assets/rollouts/can.gif",
+        "still": "assets/rollouts/can.png",
+        "width": 320,
+        "height": 180,
+        "count": 5
+      },
+      "expertData": [
+        50.0,
+        50.0
+      ]
+    }
+  ]
+}
