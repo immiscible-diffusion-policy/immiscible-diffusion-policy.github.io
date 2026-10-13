@@ -2,12 +2,12 @@
   "pusht": {
     "source": "../demo.mp4",
     "startSeconds": 70.3,
-    "endSeconds": 73.5,
+    "endSeconds": 75.5,
     "crop": "186:186:1056:222",
     "policy": "Immiscible Diffusion Policy",
     "sourcePlaybackSpeed": 3,
     "fps": 10,
-    "note": "Trimmed the outer plot border; rollout content and playback speed are unchanged."
+    "note": "Includes the final target alignment and a brief hold on the completed push before looping; original playback speed and border crop are preserved."
   },
   "blocks": {
     "source": "../demo.mp4",

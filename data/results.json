@@ -51,7 +51,7 @@
       ],
       "frequencyNote": "The paper aggregates the dominant and alternative behaviors identified for each vanilla training seed. The dominant behavior can differ across seeds; colors therefore identify frequency groups, not fixed physical behaviors.",
       "rollout": {
-        "gif": "assets/rollouts/pusht.gif",
+        "gif": "assets/rollouts/pusht.gif?v=complete-20261013",
         "still": "assets/rollouts/pusht.png",
         "width": 240,
         "height": 240
