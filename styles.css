@@ -89,3 +89,6 @@
 /* Narrow bar segments retain their true widths; labels sit below with fine arrows. */
 .bar-callouts{display:block;width:100%;overflow:visible}
 .bar-callouts text{font-family:Arial,Helvetica,sans-serif;font-size:13px}
+
+.task-media figure{position:relative}
+.media-unavailable::after{content:"Preview unavailable";position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px}

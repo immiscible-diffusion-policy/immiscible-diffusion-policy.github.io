@@ -4,27 +4,101 @@ const panel = document.getElementById('result-panel');
 let tasks = [];
 let selectedTask = 'pusht';
 const format = value => Number(value).toFixed(2).replace(/\.00$/, '');
-const rolloutImage = document.getElementById('task-rollout-image');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const imageLoads = new Map();
+const imageSlots = new Map();
 let rolloutPaused = reducedMotion.matches;
 let rolloutVisible = !('IntersectionObserver' in window);
-let activeRollout = null;
+let activeTask = null;
+
+function loadTaskImage(src) {
+  if (imageLoads.has(src)) return imageLoads.get(src);
+  const promise = new Promise((resolve, reject) => {
+    const image = new Image();
+    image.decoding = 'async';
+    image.onload = async () => {
+      // Decode offscreen, so the browser never paints an old task while decoding.
+      try { await image.decode(); } catch (_) { /* onload already confirmed usable pixels. */ }
+      resolve(image);
+    };
+    image.onerror = () => reject(new Error(`Unable to load ${src}`));
+    image.src = src;
+  });
+  imageLoads.set(src, promise);
+  promise.catch(() => imageLoads.delete(src));
+  return promise;
+}
+
+function showTaskImage(id, src, taskId, attributes, fallback) {
+  let slot = imageSlots.get(id);
+  if (!slot) {
+    slot = {element: document.getElementById(id), version: 0};
+    imageSlots.set(id, slot);
+  }
+  if (slot.src === src && slot.taskId === taskId) return;
+  slot.src = src;
+  slot.taskId = taskId;
+  const version = ++slot.version;
+  const container = slot.element.parentElement;
+  container.setAttribute('aria-busy', 'true');
+  container.classList.remove('media-unavailable');
+  // A still from this task may remain while its animation loads, never another task.
+  if (slot.element.dataset.task !== taskId || !fallback) slot.element.style.visibility = 'hidden';
+  Object.assign(slot.element, attributes);
+  let primaryReady = false;
+  const install = image => {
+    if (slot.version !== version) return;
+    Object.assign(image, attributes, {id, loading: 'eager'});
+    image.dataset.task = taskId;
+    image.style.visibility = 'visible';
+    if (slot.element !== image) slot.element.replaceWith(image);
+    slot.element = image;
+    container.setAttribute('aria-busy', 'false');
+  };
+  const poster = fallback ? loadTaskImage(fallback) : null;
+  if (poster) poster.then(image => {
+    if (!primaryReady) install(image);
+  }).catch(() => {});
+  loadTaskImage(src).then(image => {
+    primaryReady = true;
+    install(image);
+  }).catch(async () => {
+    try {
+      if (!poster) throw new Error('No fallback image');
+      install(await poster);
+    } catch (_) {
+      if (slot.version === version) {
+        container.setAttribute('aria-busy', 'false');
+        container.classList.add('media-unavailable');
+      }
+    }
+    if (slot.version === version) slot.src = null; // Allow a later retry.
+  });
+}
+
 function syncRollout() {
-  if (!activeRollout) return;
+  if (!activeTask) return;
+  const rollout = activeTask.rollout;
   const playing = !rolloutPaused && rolloutVisible && !document.hidden;
-  const src = playing ? activeRollout.gif : activeRollout.still;
-  if (rolloutImage.getAttribute('src') !== src) rolloutImage.src = src;
+  showTaskImage('task-rollout-image', playing ? rollout.gif : rollout.still, activeTask.id, {
+    alt: rollout.count
+      ? `${rollout.count} example Immiscible Diffusion Policy rollouts for ${activeTask.name}`
+      : `Example Immiscible Diffusion Policy rollout for ${activeTask.name}`,
+    width: rollout.width, height: rollout.height
+  }, playing ? rollout.still : null);
 }
 function renderRollout(task) {
   const illustration = document.getElementById('task-illustration');
-  const illustrationImage = document.getElementById('task-illustration-image');
   illustration.hidden = !task.illustration;
   document.querySelector('.task-introduction').classList.toggle('has-task-illustration', Boolean(task.illustration));
   if (task.illustration) {
-    illustrationImage.src = task.illustration.src;
-    illustrationImage.alt = task.illustration.alt;
-    illustrationImage.width = task.illustration.width;
-    illustrationImage.height = task.illustration.height;
+    showTaskImage('task-illustration-image', task.illustration.src, task.id, {
+      alt: task.illustration.alt, width: task.illustration.width, height: task.illustration.height
+    });
+  } else {
+    // Invalidate any illustration still loading for the previously selected task.
+    const slot = imageSlots.get('task-illustration-image');
+    if (slot) { slot.version++; slot.src = null; }
   }
   const media = document.querySelector('.task-media');
   const rolloutRatio = task.rollout.width / task.rollout.height;
@@ -33,12 +107,7 @@ function renderRollout(task) {
   media.style.setProperty('--illustration-column', `${illustrationRatio || 1}fr`);
   media.style.setProperty('--rollout-column', `${rolloutRatio}fr`);
   media.style.setProperty('--media-width', `${160 * (illustrationRatio + rolloutRatio) + (task.illustration ? 12 : 0)}px`);
-  activeRollout = task.rollout;
-  rolloutImage.alt = activeRollout.count
-    ? `${activeRollout.count} example Immiscible Diffusion Policy rollouts for ${task.name}`
-    : `Example Immiscible Diffusion Policy rollout for ${task.name}`;
-  rolloutImage.width = activeRollout.width;
-  rolloutImage.height = activeRollout.height;
+  activeTask = task;
   syncRollout();
 }
 reducedMotion.addEventListener('change', event => {
@@ -46,12 +115,14 @@ reducedMotion.addEventListener('change', event => {
   syncRollout();
 });
 document.addEventListener('visibilitychange', syncRollout);
+window.addEventListener('pageshow', syncRollout);
 if ('IntersectionObserver' in window) {
   const rolloutObserver = new IntersectionObserver(entries => {
     rolloutVisible = entries[0].isIntersecting;
     syncRollout();
   });
-  rolloutObserver.observe(rolloutImage);
+  // Observe the stable container, since decoded images are swapped atomically.
+  rolloutObserver.observe(document.querySelector('.task-rollout'));
 }
 const labelCanvas = document.createElement('canvas');
 const labelContext = labelCanvas.getContext('2d');
@@ -151,9 +222,9 @@ if ('ResizeObserver' in window) {
   window.addEventListener('resize', layoutDistributionLabels);
 }
 function renderTask(id, focus = false) {
+  selectedTask = id;
   const task = tasks.find(t => t.id === id);
   if (!task) return;
-  selectedTask = id;
   renderRollout(task);
   tabs.forEach(tab => {
     const selected = tab.dataset.task === id;
@@ -211,6 +282,12 @@ function renderTask(id, focus = false) {
   });
 }
 tabs.forEach((tab,index) => {
+  const preload = () => {
+    const task = tasks.find(task => task.id === tab.dataset.task);
+    if (task && !reducedMotion.matches) loadTaskImage(task.rollout.gif).catch(() => {});
+  };
+  tab.addEventListener('pointerenter', preload);
+  tab.addEventListener('focus', preload);
   tab.addEventListener('click', () => renderTask(tab.dataset.task));
   tab.addEventListener('keydown', event => {
     const targets = {ArrowRight:(index+1)%tabs.length, ArrowLeft:(index-1+tabs.length)%tabs.length, Home:0, End:tabs.length-1};
@@ -223,7 +300,15 @@ tabs.forEach((tab,index) => {
 fetch('data/results.json?v=task-panels-2', {cache: 'no-cache'}).then(response => {
   if (!response.ok) throw new Error('Unable to load results');
   return response.json();
-}).then(data => { tasks = data.tasks; renderTask(selectedTask); }).catch(() => {
+}).then(data => {
+  tasks = data.tasks;
+  // Small stills make a correct task preview available before its larger GIF arrives.
+  tasks.forEach(task => {
+    loadTaskImage(task.rollout.still).catch(() => {});
+    if (task.illustration) loadTaskImage(task.illustration.src).catch(() => {});
+  });
+  renderTask(selectedTask);
+}).catch(() => {
   document.getElementById('distribution-bars').textContent = 'The interactive chart could not load. View the complete results in the table below.';
 });
 document.querySelectorAll('[data-select-task]').forEach(link => link.addEventListener('click', () => {
@@ -231,21 +316,75 @@ document.querySelectorAll('[data-select-task]').forEach(link => link.addEventLis
   renderTask(selectedTask);
 }));
 const collapseVideo = document.getElementById('collapse-video');
+collapseVideo.muted = true;
+collapseVideo.defaultMuted = true;
+collapseVideo.playsInline = true;
 let collapseVisible = !('IntersectionObserver' in window);
+let collapsePlayPending = false;
+let collapseAutoplayBlocked = false;
+let collapseRetries = 0;
+let collapseRetryTimer;
+const shouldPlayCollapse = () => collapseVisible && !reducedMotion.matches && !document.hidden;
 function syncCollapseVideo() {
-  if (collapseVisible && !reducedMotion.matches && !document.hidden) {
-    collapseVideo.play().catch(() => {});
-  } else {
+  if (!shouldPlayCollapse()) {
+    clearTimeout(collapseRetryTimer);
     collapseVideo.pause();
+    return;
+  }
+  if (!collapseVideo.paused || collapsePlayPending || collapseAutoplayBlocked) return;
+  collapseVideo.muted = true;
+  collapsePlayPending = true;
+  collapseVideo.play().then(() => {
+    collapseRetries = 0;
+    collapseVideo.controls = false;
+    if (!shouldPlayCollapse()) collapseVideo.pause();
+  }).catch(error => {
+    if (!shouldPlayCollapse()) return;
+    if (error.name === 'AbortError' && collapseRetries++ < 2) {
+      collapseRetryTimer = setTimeout(syncCollapseVideo, 250);
+    } else {
+      // Some browsers block autoplay even for muted video. Keep manual playback available.
+      collapseAutoplayBlocked = error.name === 'NotAllowedError';
+      collapseVideo.controls = true;
+    }
+  }).finally(() => { collapsePlayPending = false; });
+}
+['loadeddata', 'canplay'].forEach(event => collapseVideo.addEventListener(event, syncCollapseVideo));
+collapseVideo.addEventListener('pause', () => {
+  if (shouldPlayCollapse() && !collapseAutoplayBlocked) {
+    clearTimeout(collapseRetryTimer);
+    collapseRetryTimer = setTimeout(syncCollapseVideo, 250);
+  }
+});
+collapseVideo.addEventListener('playing', () => {
+  collapseAutoplayBlocked = false;
+  collapseVideo.controls = false;
+});
+// Safari may pause media while the containing section is fading in.
+document.getElementById('collapse').addEventListener('transitionend', event => {
+  if (event.propertyName === 'opacity') syncCollapseVideo();
+});
+function retryCollapseOnGesture() {
+  if (shouldPlayCollapse()) {
+    collapseAutoplayBlocked = false;
+    collapseRetries = 0;
+    syncCollapseVideo();
   }
 }
+document.addEventListener('pointerdown', retryCollapseOnGesture);
+document.addEventListener('keydown', retryCollapseOnGesture);
 reducedMotion.addEventListener('change', syncCollapseVideo);
 document.addEventListener('visibilitychange', syncCollapseVideo);
+window.addEventListener('pageshow', () => {
+  const rect = collapseVideo.getBoundingClientRect();
+  collapseVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+  syncCollapseVideo();
+});
 if ('IntersectionObserver' in window) {
   const collapseObserver = new IntersectionObserver(entries => {
     collapseVisible = entries[0].isIntersecting;
     syncCollapseVideo();
-  }, {threshold: 0.15});
+  }, {threshold: 0});
   collapseObserver.observe(collapseVideo);
 } else {
   syncCollapseVideo();
