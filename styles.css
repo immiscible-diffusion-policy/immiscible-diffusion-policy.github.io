@@ -60,7 +60,7 @@
 .collapse-section{border-top:1px solid var(--line)}
 .collapse-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:42px;align-items:center}
 .collapse-layout .prose{margin:0}
-.collapse-rollouts video{width:100%;height:auto;aspect-ratio:764/606;background:white}
+.collapse-rollouts>img{width:100%;height:auto;aspect-ratio:764/606;background:white}
 .conclusion-section{padding-bottom:25px}
 @media(max-width:760px){.collapse-layout{grid-template-columns:1fr;gap:26px}.collapse-rollouts{max-width:600px;width:100%;margin:auto}}
 
@@ -92,3 +92,5 @@
 
 .task-media figure{position:relative}
 .media-unavailable::after{content:"Preview unavailable";position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px}
+
+.collapse-rollouts{position:relative}

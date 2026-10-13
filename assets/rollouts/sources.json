@@ -79,6 +79,8 @@
     "direction": "counterclockwise",
     "sourcePlaybackSpeed": 3,
     "fps": 20,
-    "format": "mp4"
+    "format": "gif",
+    "file": "pusht_vanilla_collapse.gif",
+    "note": "Same eight second clip, crop, playback speed, and resolution as the original MP4; displayed as a GIF to avoid video autoplay restrictions."
   }
 }

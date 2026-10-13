@@ -12,8 +12,8 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://immiscible-diffusion-policy.github.io/">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=media-20261013">
-  <script src="app.js?v=media-20261013" defer></script>
+  <link rel="stylesheet" href="styles.css?v=collapse-gif-20261013">
+  <script src="app.js?v=collapse-gif-20261013" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -60,7 +60,7 @@
         <p>In Push T, vanilla policies assign an average of <strong>97.6% of rollouts to a single modality</strong> across 10 training seeds, with the preferred direction varying across seeds. Eight of the 10 policies generate only one modality across all 50 evaluation rollouts, despite equal representation of both directions in every training batch.</p>
         <p>The same failure extends across all seven tasks: vanilla policies strongly favor one modality on the simulation tasks with two modalities, lose a modality on both tasks with four modalities, and use only one hand on both humanoid tasks.</p>
       </div>
-      <figure class="collapse-rollouts"><video id="collapse-video" muted loop playsinline preload="auto" poster="assets/rollouts/pusht_vanilla_collapse.png" width="764" height="606" aria-label="Nine vanilla Diffusion Policy rollouts in Push T, all rotating counterclockwise, shown at three times speed"><source src="assets/rollouts/pusht_vanilla_collapse.mp4" type="video/mp4"></video></figure>
+      <figure class="collapse-rollouts"><img id="collapse-rollout" src="assets/rollouts/pusht_vanilla_collapse.png" data-animation="assets/rollouts/pusht_vanilla_collapse.gif" width="764" height="606" loading="lazy" alt="Vanilla Diffusion Policy rollouts in Push T showing modality collapse"></figure>
     </div>
   </section>
 

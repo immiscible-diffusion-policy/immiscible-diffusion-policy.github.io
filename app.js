@@ -315,79 +315,40 @@ document.querySelectorAll('[data-select-task]').forEach(link => link.addEventLis
   selectedTask = link.dataset.selectTask;
   renderTask(selectedTask);
 }));
-const collapseVideo = document.getElementById('collapse-video');
-collapseVideo.muted = true;
-collapseVideo.defaultMuted = true;
-collapseVideo.playsInline = true;
+const collapseMedia = document.querySelector('.collapse-rollouts');
+const collapseInitialImage = document.getElementById('collapse-rollout');
+const collapsePoster = collapseInitialImage.getAttribute('src');
+const collapseAnimation = collapseInitialImage.dataset.animation;
 let collapseVisible = !('IntersectionObserver' in window);
-let collapsePlayPending = false;
-let collapseAutoplayBlocked = false;
-let collapseRetries = 0;
-let collapseRetryTimer;
-const shouldPlayCollapse = () => collapseVisible && !reducedMotion.matches && !document.hidden;
-function syncCollapseVideo() {
-  if (!shouldPlayCollapse()) {
-    clearTimeout(collapseRetryTimer);
-    collapseVideo.pause();
-    return;
-  }
-  if (!collapseVideo.paused || collapsePlayPending || collapseAutoplayBlocked) return;
-  collapseVideo.muted = true;
-  collapsePlayPending = true;
-  collapseVideo.play().then(() => {
-    collapseRetries = 0;
-    collapseVideo.controls = false;
-    if (!shouldPlayCollapse()) collapseVideo.pause();
-  }).catch(error => {
-    if (!shouldPlayCollapse()) return;
-    if (error.name === 'AbortError' && collapseRetries++ < 2) {
-      collapseRetryTimer = setTimeout(syncCollapseVideo, 250);
-    } else {
-      // Some browsers block autoplay even for muted video. Keep manual playback available.
-      collapseAutoplayBlocked = error.name === 'NotAllowedError';
-      collapseVideo.controls = true;
-    }
-  }).finally(() => { collapsePlayPending = false; });
+function syncCollapseRollout() {
+  const playing = collapseVisible && !reducedMotion.matches && !document.hidden;
+  showTaskImage('collapse-rollout', playing ? collapseAnimation : collapsePoster, 'collapse', {
+    alt: 'Vanilla Diffusion Policy rollouts in Push T showing modality collapse',
+    width: 764, height: 606
+  }, playing ? collapsePoster : null);
 }
-['loadeddata', 'canplay'].forEach(event => collapseVideo.addEventListener(event, syncCollapseVideo));
-collapseVideo.addEventListener('pause', () => {
-  if (shouldPlayCollapse() && !collapseAutoplayBlocked) {
-    clearTimeout(collapseRetryTimer);
-    collapseRetryTimer = setTimeout(syncCollapseVideo, 250);
-  }
-});
-collapseVideo.addEventListener('playing', () => {
-  collapseAutoplayBlocked = false;
-  collapseVideo.controls = false;
-});
-// Safari may pause media while the containing section is fading in.
-document.getElementById('collapse').addEventListener('transitionend', event => {
-  if (event.propertyName === 'opacity') syncCollapseVideo();
-});
-function retryCollapseOnGesture() {
-  if (shouldPlayCollapse()) {
-    collapseAutoplayBlocked = false;
-    collapseRetries = 0;
-    syncCollapseVideo();
-  }
-}
-document.addEventListener('pointerdown', retryCollapseOnGesture);
-document.addEventListener('keydown', retryCollapseOnGesture);
-reducedMotion.addEventListener('change', syncCollapseVideo);
-document.addEventListener('visibilitychange', syncCollapseVideo);
+reducedMotion.addEventListener('change', syncCollapseRollout);
+document.addEventListener('visibilitychange', syncCollapseRollout);
 window.addEventListener('pageshow', () => {
-  const rect = collapseVideo.getBoundingClientRect();
+  const rect = collapseMedia.getBoundingClientRect();
   collapseVisible = rect.bottom > 0 && rect.top < window.innerHeight;
-  syncCollapseVideo();
+  syncCollapseRollout();
 });
 if ('IntersectionObserver' in window) {
   const collapseObserver = new IntersectionObserver(entries => {
     collapseVisible = entries[0].isIntersecting;
-    syncCollapseVideo();
-  }, {threshold: 0});
-  collapseObserver.observe(collapseVideo);
+    syncCollapseRollout();
+  });
+  collapseObserver.observe(collapseMedia);
+  // Fetch the animation shortly before it enters view, retaining the still until decoded.
+  const preloadObserver = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && !reducedMotion.matches) {
+      loadTaskImage(collapseAnimation).then(() => preloadObserver.disconnect()).catch(() => {});
+    }
+  }, {rootMargin: '400px'});
+  preloadObserver.observe(collapseMedia);
 } else {
-  syncCollapseVideo();
+  syncCollapseRollout();
 }
 const demo = document.getElementById('demo-video');
 // A visitor controls playback; pause media that has left the screen.
